@@ -13,7 +13,7 @@ interface CartItem {
   readonly totalPrice: number;
 }
 class CartStateImpl implements CartState {
-  [immerable] = true;
+  private static readonly [immerable] = true;
   constructor(
     readonly items: CartItem[]
   ) {}
@@ -29,7 +29,7 @@ class CartStateImpl implements CartState {
   }
 }
 class CartItemImpl implements CartItem {
-  [immerable] = true;
+  private static readonly [immerable] = true;
   constructor(
     readonly id: string | number,
     readonly name: string,
@@ -43,8 +43,8 @@ class CartItemImpl implements CartItem {
     // workaround for immer
   }
 }
-// CartStateImpl[immerable] = true;
-// CartItemImpl[immerable] = true;
+// (CartStateImpl as any)[immerable] = true;
+// (CartItemImpl as any)[immerable] = true;
 
 const name = 'cart';
 const initialState = new CartStateImpl([]);
