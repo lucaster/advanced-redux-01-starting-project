@@ -42,9 +42,9 @@ const cartSlice = createSlice({
       }
       else if (existingItem.quantity > 1) {
         // decrease
-        existingItem.quantity--;
+        existingItem.quantity -= 1;
         // This is not DDD:
-        existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
+        existingItem.totalPrice = existingItem.totalPrice - existingItem.price * 1;
       }
       else {
         // NOOP
