@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { immerable } from 'immer';
 
-// CAVEAT: https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state
+// Redux state can only be anemic js object:
+// https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state
+// https://redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers#designing-the-state-structure
 
 interface CartState {
   readonly items: CartItem[];
