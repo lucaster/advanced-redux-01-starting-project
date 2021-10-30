@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { immerable } from 'immer';
 
+// CAVEAT: https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state
+
 interface CartState {
   readonly items: CartItem[];
   readonly totalQuantity: number;
@@ -26,6 +28,7 @@ class CartStateImpl implements CartState {
   }
   set totalQuantity(value: number) {
     // workaround for immer
+    console.warn('CartStateImpl', 'totalQuantity');
   }
 }
 class CartItemImpl implements CartItem {
@@ -41,6 +44,7 @@ class CartItemImpl implements CartItem {
   }
   set totalPrice(value: number) {
     // workaround for immer
+    console.warn('CartItemImpl', 'totalPrice');
   }
 }
 // (CartStateImpl as any)[immerable] = true;
