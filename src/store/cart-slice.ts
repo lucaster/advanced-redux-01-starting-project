@@ -1,11 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+interface CartState {
+  readonly items: CartItem[];
+  readonly totalQuantity: number;
+}
+interface CartItem {
+  readonly id: string | number;
+  readonly name: string;
+  readonly price: number;
+  readonly quantity: number;
+  readonly totalPrice: number;
+}
+const name = 'cart';
+const initialState: CartState = {
+  items: [],
+  totalQuantity: 0
+};
+
 const cartSlice = createSlice({
-  name: 'cart',
-  initialState: {
-    items: [],
-    totalQuantity: 0,
-  },
+  name,
+  initialState,
   reducers: {
     addItemToCart: (state, action) => {
       console.debug('cart', 'addItemToCard', { action });
@@ -34,7 +48,7 @@ const cartSlice = createSlice({
     removeItemFromCart: (state, action) => {
       console.debug('cart', 'removeItemFromCart', { action });
       const id = action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+      const existingItem = state.items.find((item) => item.id === id)!;
       state.totalQuantity--;
       if (existingItem.quantity === 1) {
         // remove the item entirely
