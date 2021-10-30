@@ -8,25 +8,48 @@ const cartSlice = createSlice({
   },
   reducers: {
     addItemToCart: (state, action) => {
-      const newItem = action.payload.item;
+      console.debug('cart', 'addItemToCard', { action });
+      const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
+      state.totalQuantity++;
       if (!existingItem) {
         const addedItem = {
-          itemId: newItem.id,
-          price: newItem.price,
-          quantity: 1,
-          totalPrice: newItem.price, // totalPrice = quantity * price
+          id: newItem.id,
           name: newItem.name,
+          price: newItem.price,
+          quantity: 1, // always add 1 specimen
+          totalPrice: newItem.price, // totalPrice = quantity * price
         };
         state.items.push(addedItem);
       }
       else {
-        existingItem.quantity += newItem.quantity;
-        // This is not DDD - totalPrice should be a smart getter instead:
-        existingItem.totalPrice += newItem.price * newItem.quantity;
+        existingItem.quantity += 1;
+        // This is not DDD:
+        existingItem.totalPrice += newItem.price * 1;
       }
     },
-    removeItemFromCart: () => {},
+    /**
+     * Remove 1 item of a given kind
+     */
+    removeItemFromCart: (state, action) => {
+      console.debug('cart', 'removeItemFromCart', { action });
+      const id = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
+      state.totalQuantity--;
+      if (existingItem.quantity === 1) {
+        // remove the item entirely
+        state.items = state.items.filter((item) => item.id !== id);
+      }
+      else if (existingItem.quantity > 1) {
+        // decrease
+        existingItem.quantity--;
+        // This is not DDD:
+        existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
+      }
+      else {
+        // NOOP
+      }
+    },
   },
 });
 
