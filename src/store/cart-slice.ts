@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { immerable } from 'immer';
 
 interface CartState {
   readonly items: CartItem[];
@@ -11,11 +12,42 @@ interface CartItem {
   readonly quantity: number;
   readonly totalPrice: number;
 }
+class CartStateImpl implements CartState {
+  [immerable] = true;
+  constructor(
+    readonly items: CartItem[]
+  ) {}
+  get totalQuantity(): number {
+    let t = 0;
+    for (const item of this.items) {
+      t += item.quantity;
+    }
+    return t;
+  }
+  set totalQuantity(value: number) {
+    // workaround for immer
+  }
+}
+class CartItemImpl implements CartItem {
+  [immerable] = true;
+  constructor(
+    readonly id: string | number,
+    readonly name: string,
+    readonly price: number,
+    readonly quantity: number
+  ) {}
+  get totalPrice(): number {
+    return this.price * this.quantity;
+  }
+  set totalPrice(value: number) {
+    // workaround for immer
+  }
+}
+// CartStateImpl[immerable] = true;
+// CartItemImpl[immerable] = true;
+
 const name = 'cart';
-const initialState: CartState = {
-  items: [],
-  totalQuantity: 0
-};
+const initialState = new CartStateImpl([]);
 
 const cartSlice = createSlice({
   name,
@@ -27,19 +59,16 @@ const cartSlice = createSlice({
       const existingItem = state.items.find((item) => item.id === newItem.id);
       state.totalQuantity++;
       if (!existingItem) {
-        const addedItem = {
-          id: newItem.id,
-          name: newItem.name,
-          price: newItem.price,
-          quantity: 1, // always add 1 specimen
-          totalPrice: newItem.price, // totalPrice = quantity * price
-        };
+        const addedItem = new CartItemImpl(
+          newItem.id,
+          newItem.name,
+          newItem.price,
+          1
+        );
         state.items.push(addedItem);
       }
       else {
         existingItem.quantity += 1;
-        // This is not DDD:
-        existingItem.totalPrice += newItem.price * 1;
       }
     },
     /**
@@ -57,8 +86,6 @@ const cartSlice = createSlice({
       else if (existingItem.quantity > 1) {
         // decrease
         existingItem.quantity -= 1;
-        // This is not DDD:
-        existingItem.totalPrice = existingItem.totalPrice - existingItem.price * 1;
       }
       else {
         // NOOP
