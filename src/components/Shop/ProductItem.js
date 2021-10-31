@@ -10,9 +10,11 @@ const ProductItem = ({ product }) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    dispatch(cartActions.addItemToCart({
-      id, name, price
-    }))
+    dispatch(
+      cartActions.addItemToCart({
+        id, name, price
+      })
+    )
   };
 
   return (
