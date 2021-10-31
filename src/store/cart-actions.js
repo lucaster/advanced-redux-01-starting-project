@@ -2,8 +2,12 @@ import { DB_URL } from "../config/secrets";
 import { cartActions } from "./cart-slice";
 import { uiActions } from "./ui-slice";
 
+/**
+ * action creator / thunk
+ */
 export const fetchCartData = () =>
   async (dispatch) => {
+
     const fetchData = async () => {
       const response = await fetch(DB_URL + '/cart.json');
       if (!response.ok) {
@@ -12,6 +16,7 @@ export const fetchCartData = () =>
       const data = await response.json();
       return data;
     };
+
     try {
       const cart = await fetchData();
 
@@ -34,7 +39,7 @@ export const fetchCartData = () =>
 ;
 
 /**
- * action creator
+ * action creator / thunk
  */
  export const sendCartData = (cart) => {
   return async (dispatch) => {
