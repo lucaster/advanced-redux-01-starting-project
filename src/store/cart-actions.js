@@ -15,10 +15,10 @@ export const fetchCartData = () =>
     try {
       const cart = await fetchData();
 
-      const fixedCart = (() => ({
-          ...cart,
-          items: cart.items || []
-      }))();
+      const fixedCart = {
+        ...cart,
+        items: cart.items || []
+      };
 
       dispatch(cartActions.replaceCart(fixedCart));
     }
