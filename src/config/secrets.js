@@ -1,1 +1,1 @@
-export const DB_URL = '';
+export const DB_URL = 'https://udemy-advanced-redux-default-rtdb.firebaseio.com/';
