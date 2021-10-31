@@ -27,6 +27,7 @@ const cartSlice = createSlice({
         // This is not DDD:
         existingItem.totalPrice += newItem.price * 1;
       }
+      // DO NOT TRIGGER SIDE-EFFECTS OR DUN ASYNC CODE INSIDE REDUCERS!
     },
     /**
      * Remove 1 item of a given kind
