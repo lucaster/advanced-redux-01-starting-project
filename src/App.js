@@ -4,7 +4,7 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import Notification from './components/UI/Notification';
-import { sendCartData } from './store/cart-slice';
+import { fetchCartData, sendCartData } from './store/cart-actions';
 
 let isInitial = true;
 
@@ -14,6 +14,10 @@ function App() {
   const { showCart, notification } = useSelector((state) => state.ui);
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
   // replace the whole cart every time it changes:
   useEffect(() => {

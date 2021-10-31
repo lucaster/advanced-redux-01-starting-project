@@ -1,0 +1,69 @@
+import { DB_URL } from "../config/secrets";
+import { cartActions } from "./cart-slice";
+import { uiActions } from "./ui-slice";
+
+export const fetchCartData = () =>
+  async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch(DB_URL + '/cart.json');
+      if (!response.ok) {
+        return new Error('Cart data fetch failed');
+      }
+      const data = await response.json();
+      return data;
+    };
+    try {
+      const cart = await fetchData();
+
+      dispatch(cartActions.replaceCart(cart));
+    }
+    catch (error) {
+      dispatch(uiActions.showNotification({
+        status: 'error',
+        title: 'Error!',
+        message:'Fetching cart data failed :(',
+      }));
+    }
+  }
+;
+
+/**
+ * action creator
+ */
+ export const sendCartData = (cart) => {
+  return async (dispatch) => {
+
+    dispatch(uiActions.showNotification({
+      status: 'pending',
+      title: 'Sending...',
+      message: 'Sending cart data',
+    }));
+
+    const sendRequest = async () => {
+      const response = await fetch(DB_URL + '/cart.json', {
+        method: 'PUT',
+        body: JSON.stringify(cart),
+      });
+      if (!response.ok) {
+        throw new Error('Sending cart data failed.');
+      }
+    };
+
+    try {
+      await sendRequest();
+
+      dispatch(uiActions.showNotification({
+        status: 'success',
+        title: 'Success!',
+        message: 'Sending cart data succeeded :)',
+      }));
+    }
+    catch (error) {
+      dispatch(uiActions.showNotification({
+        status: 'error',
+        title: 'Error!',
+        message:'Sending cart data failed :(',
+      }));
+    }
+  };
+};

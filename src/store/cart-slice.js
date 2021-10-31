@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DB_URL } from '../config/secrets';
-import { uiActions } from './ui-slice';
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -9,6 +7,11 @@ const cartSlice = createSlice({
     totalQuantity: 0,
   },
   reducers: {
+    replaceCart: (state, action) => {
+      const cart = action.payload;
+      state.totalQuantity = cart.totalQuantity;
+      state.items = cart.items.map(item => ({ ...item }));
+    },
     addItemToCart: (state, action) => {
       console.debug('cart', 'addItemToCard', { action });
       const newItem = action.payload;
@@ -55,47 +58,6 @@ const cartSlice = createSlice({
     },
   },
 });
-
-/**
- * action creator
- */
-export const sendCartData = (cart) => {
-  return async (dispatch) => {
-
-    dispatch(uiActions.showNotification({
-      status: 'pending',
-      title: 'Sending...',
-      message: 'Sending cart data',
-    }));
-
-    const sendRequest = async () => {
-      const response = await fetch(DB_URL + '/cart.json', {
-        method: 'PUT',
-        body: JSON.stringify(cart),
-      });
-      if (!response.ok) {
-        throw new Error('Sending cart data failed.');
-      }
-    };
-
-    try {
-      await sendRequest();
-
-      dispatch(uiActions.showNotification({
-        status: 'success',
-        title: 'Success!',
-        message: 'Sending cart data succeeded :)',
-      }));
-    }
-    catch (error) {
-      dispatch(uiActions.showNotification({
-        status: 'error',
-        title: 'Error!',
-        message:'Sending cart data failed :(',
-      }));
-    }
-  };
-};
 
 export const cartActions = cartSlice.actions;
 
