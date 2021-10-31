@@ -14,6 +14,9 @@ const cartSlice = createSlice({
       state.totalQuantity = cart.totalQuantity;
       state.items = cart.items.map(item => ({ ...item }));
     },
+    /**
+     * Add 1 item of a given kind
+     */
     addItemToCart: (state, action) => {
       console.debug('cart', 'addItemToCard', { action });
       state.changed = true;
