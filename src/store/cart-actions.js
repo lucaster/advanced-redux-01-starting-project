@@ -15,9 +15,15 @@ export const fetchCartData = () =>
     try {
       const cart = await fetchData();
 
-      dispatch(cartActions.replaceCart(cart));
+      const fixedCart = (() => ({
+          ...cart,
+          items: cart.items || []
+      }))();
+
+      dispatch(cartActions.replaceCart(fixedCart));
     }
     catch (error) {
+      console.error(error);
       dispatch(uiActions.showNotification({
         status: 'error',
         title: 'Error!',
