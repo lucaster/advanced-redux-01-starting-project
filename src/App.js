@@ -15,6 +15,7 @@ function App() {
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
 
+  // fetch cart data initially:
   useEffect(() => {
     dispatch(fetchCartData());
   }, [dispatch]);
