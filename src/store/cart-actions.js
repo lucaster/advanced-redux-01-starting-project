@@ -40,9 +40,15 @@ export const fetchCartData = () =>
     }));
 
     const sendRequest = async () => {
+      const cleanCart = (() => {
+        const clean = { ...cart };
+        // Exclude this because we only need it as a hack to prevent replace upon initialfetch
+        delete clean.changed;
+        return clean;
+      })();
       const response = await fetch(DB_URL + '/cart.json', {
         method: 'PUT',
-        body: JSON.stringify(cart),
+        body: JSON.stringify(cleanCart),
       });
       if (!response.ok) {
         throw new Error('Sending cart data failed.');
