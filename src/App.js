@@ -6,8 +6,6 @@ import Products from './components/Shop/Products';
 import Notification from './components/UI/Notification';
 import { fetchCartData, sendCartData } from './store/cart-actions';
 
-let isInitial = true;
-
 function App() {
   // useSelector sets up a subscription, so this component will be re-rendered
   // ui is the name of the reducer
@@ -22,10 +20,6 @@ function App() {
 
   // replace the whole cart every time it changes:
   useEffect(() => {
-    if (isInitial) {
-      isInitial = false;
-      return;
-    }
     if (cart.changed) {
       dispatch(sendCartData(cart));
     }
