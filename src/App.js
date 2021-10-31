@@ -7,6 +7,8 @@ import Notification from './components/UI/Notification';
 import { DB_URL } from './config/secrets';
 import { uiActions } from './store/ui-slice';
 
+let isInitial = true;
+
 function App() {
   // useSelector sets up a subscription, so this component will be re-rendered
   // ui is the name of the reducer
@@ -35,8 +37,12 @@ function App() {
         title: 'Success!',
         message: 'Sending cart data succeeded :)',
       }));
-      // const responseJson = await response.json;
     };
+
+    if (isInitial) {
+      isInitial = false;
+      return;
+    }
 
     sendCartData().catch((error) => {
       dispatch(uiActions.showNotification({
